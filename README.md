@@ -1,5 +1,5 @@
 Todo
-1 - read in list of usernames
+1 - read in list of usernames [done]
 2 - check they all can be called with temple osrs api first
 3 - decide good stats to check for
 4 - create data structures for each player / teams
