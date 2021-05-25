@@ -1,17 +1,17 @@
 extern crate reqwest;
 extern crate tokio;
+use reqwest::Error;
 use serde_derive::{Deserialize, Serialize};
 use serde_json::Value;
-use std::{collections::HashMap, io};
+use std::io;
 
-#[allow(dead_code)]
 #[derive(Serialize, Deserialize, Debug, Default)]
 struct Player {
     name: String,
     slayer: Option<u64>,
-    tiles_score: Option<u64>,
     ehp: Option<u64>,
     ehb: Option<u64>,
+    tiles_score: Option<u64>,
     ehp_avg: Option<u64>,
     ehb_avg: Option<u64>,
     manual_score: Option<u64>,
@@ -22,58 +22,54 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // cargo run src/main.rs < input/usernames_test.csv
 
     // Read in list of usernames from csv (stdin)
-    let mut players = read_usernames();
+    let players = read_usernames();
 
-    // Testing prints
-    for player in players.iter() {
-        println!("{}", player.name)
-    }
+    // TODO ALEX: Call temple to update players?
+
+    // Check temple osrs can be called
+    let players: Vec<Player> = create_players_with_temple(&players).await?;
 
     // Testing changing values
-    // change_values(&mut players);
-    // for player in players.iter_mut() {
-    //     println!("{:?}", player.slayer.unwrap())
-    // }
+    for p in players.iter() {
+        println!(
+            "{} | Slayer: {:?}, EHP: {:?}, EHB: {:?}",
+            p.name, p.slayer, p.ehp, p.ehb
+        )
+    }
 
-    // TODO ALEX: Update all temple osrs from api before getting data -> make sure all up to date
-    // Check temple osrs can be called
-    update_with_temple(&mut players).await?;
     Ok(())
 }
 
-async fn update_with_temple(players: &mut Vec<Player>) -> Result<(), Box<dyn std::error::Error>> {
-    // call api and see if there is a response
+async fn create_players_with_temple(player_names: &Vec<String>) -> Result<Vec<Player>, Error> {
+    let mut players = Vec::new();
 
-    // stats_req = req.get(
-    //     "https://templeosrs.com/api/player_stats.php?player={}&bosses=1".format(p_req)).json()
-
-    // # get ehp and ehb in last THREE months
-    // eff_hours_req = req.get(
-    //     "https://templeosrs.com/api/player_gains.php?player={}&time={}&bosses=1".format(p_req, DAY_IN_SEC * AVG_DAYS)).json()
-
-    // TODO ALEX: iterate through players
-    // Call temple, wait
-
-    for player in players.iter_mut() {
-        let response_string = reqwest::get(format!(
+    for player in player_names.iter() {
+        // Get most current data
+        let res_j: Value = reqwest::get(format!(
             "https://templeosrs.com/api/player_stats.php?player={}&bosses=1",
-            player.name
+            player
         ))
         .await?
-        .text()
+        .json()
         .await?;
 
-        // Cast response to json
-        let res_json: Value = serde_json::from_str(&response_string)?;
+        // Get averages data
+        // TODO ALEX: this
+        // # get ehp and ehb in last THREE months
+        // eff_hours_req = req.get(
+        //     "https://templeosrs.com/api/player_gains.php?player={}&time={}&bosses=1".format(p_req, DAY_IN_SEC * AVG_DAYS)).json()
 
-        println!("{:?}", res_json["data"]["Slayer"]);
+        println!("{:?}", res_j["data"]["slayer"]);
 
-        // Update players structures
-        player.slayer = res_json["data"]["Slayer"].as_u64();
-        player.tiles_score = tile_score(res_json);
+        players.push(Player {
+            name: player.clone(),
+            slayer: res_j["data"]["slayer"].as_u64(),
+            ehp: res_j["data"]["Ehp"].as_u64(),
+            ehb: res_j["data"]["Ehb"].as_u64(),
+            ..Default::default()
+        });
     }
-
-    Ok(())
+    Ok(players)
 }
 
 fn tile_score(p: Value) -> u64 {
@@ -89,22 +85,15 @@ fn change_values(players: &mut Vec<Player>) {
     }
 }
 
-fn read_usernames() -> Vec<Player> {
-    let mut players: Vec<Player> = Vec::new();
+fn read_usernames() -> Vec<String> {
+    let mut players: Vec<String> = Vec::new();
 
     // Build the CSV reader and iterate over each record.
     let mut rdr = csv::Reader::from_reader(io::stdin());
-
     for result in rdr.records() {
         // The iterator yields Result<StringRecord, Error>, so we assume fine, take ok and unwrap
         let record = result.ok().unwrap();
-
-        // Create player struct and append to players list
-        let player = Player {
-            name: record[0].parse().unwrap(),
-            ..Default::default()
-        };
-        players.push(player)
+        players.push(record[0].parse().unwrap());
     }
     players
 }
