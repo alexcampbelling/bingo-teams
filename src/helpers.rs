@@ -18,3 +18,7 @@ pub fn read_usernames() -> Vec<String> {
     }
     players
 }
+
+pub fn weight_scores(players: &mut Vec<Player>) {
+    players
+}

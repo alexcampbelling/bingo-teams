@@ -20,6 +20,7 @@ struct Player {
     slayer: u64,
     tiles_score: f64,
     manual_score: u64,
+    weighted_score: f64,
 }
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -38,6 +39,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for p in players.iter() {
         println!("{:?}", p)
     }
+
+    helpers::weight_scores(&mut players);
 
     Ok(())
 }
