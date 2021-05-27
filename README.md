@@ -29,3 +29,4 @@ To-do
 - make weighted score function
 - make team distribution structures and functions
 - make config file where we keep weights
+- why the fuck is the release build so friggen big, 260mb for such small amount of code? does it include entire crates used?
