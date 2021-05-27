@@ -1,3 +1,6 @@
+// mod data_structures;
+
+use crate::data_structures::Player;
 use serde_json::Value;
 use std::io;
 
@@ -19,6 +22,6 @@ pub fn read_usernames() -> Vec<String> {
     players
 }
 
-pub fn weight_scores(players: &mut Vec<Player>) {
+pub fn weight_scores(players: &mut Vec<Player>) -> &mut Vec<Player> {
     players
 }
