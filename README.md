@@ -15,10 +15,16 @@ Todo
 - [ ] 8 - check if teams make sense, printing team list and final score
 
 
+- How to use:
+    bingo-teams make-players <csv with players usernames>
+        - this would just get the players data from temple and export as csv
+    bingo-teams weight-players <csv with players and scores in csv format>
+        - this would be used after manual changing of scores and fixing of broken players, outputs same csv but with a weighted score
+    bingo-teams make-teams <csv with players and full scores> <amount of teams to divide into>
+        - this would be used once all scores are done, out puts a txt document with teams, members, final summed score, number of players in team
 
-1
-- just read in names
-- output csv with scores, set manual scores to 0
-- this is so i can set a flag to read in names or read in names+data csv, so no need to keep calling temple
-
-
+To-do
+- make weighted score function
+- make team distribution structures and functions
+- make config file where we keep weights
+- why the fuck is the release build so friggen big, 260mb for such small amount of code? does it include entire crates used? do i need build flags?
