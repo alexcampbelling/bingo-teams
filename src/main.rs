@@ -81,7 +81,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
             let path = "./output/weighted_players.csv";
             println!("Weighted players and printing out to {:?}", path);
-            helpers::write_csv(&players, &path)?;
+            helpers::write_csv(&players, path)?;
         }
         ("make-teams", Some(sub_m)) => {
             println!("sub_m for make-teams: {:?}", sub_m)

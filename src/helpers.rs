@@ -40,10 +40,5 @@ pub fn read_csv_players(file_name: &str) -> Result<Vec<Player>, Box<dyn Error>> 
         players.push(record);
     }
 
-    println!("Checking it was read in correctly");
-    for player in players.iter() {
-        println!("{:?}", player)
-    }
-
     Ok(players)
 }

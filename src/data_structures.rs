@@ -7,8 +7,12 @@ pub struct Player {
     pub ehb: f64,
     pub ehp_avg: f64,
     pub ehb_avg: f64,
-    pub slayer: u64,
+    pub slayer_ability: f64,
     pub tiles_score: f64,
     pub manual_score: u64,
     pub weighted_score: f64,
+}
+
+pub struct Team {
+    pub members: Vec<Player>,
 }
