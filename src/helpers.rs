@@ -1,4 +1,7 @@
-use crate::data_structures::Player;
+use crate::data_structures::{Player, Team};
+use std::fs::{self, File};
+use std::io::prelude::*;
+use std::io::LineWriter;
 use std::{error::Error, path::Path};
 
 pub fn read_usernames(file_name: &str) -> Result<Vec<String>, Box<dyn Error>> {
@@ -16,7 +19,8 @@ pub fn read_usernames(file_name: &str) -> Result<Vec<String>, Box<dyn Error>> {
     Ok(players)
 }
 
-pub fn write_csv(players: &Vec<Player>, path: &str) -> Result<(), Box<dyn Error>> {
+// TODO: use generics for this printing structure function
+pub fn write_csv_player(players: &Vec<Player>, path: &str) -> Result<(), Box<dyn Error>> {
     // Build CSV writer with given path as file name
     let mut writer = csv::Writer::from_path(Path::new(path))?;
     for player in players {
@@ -25,6 +29,25 @@ pub fn write_csv(players: &Vec<Player>, path: &str) -> Result<(), Box<dyn Error>
 
     // Writer keeps an internal buffer, remember to flush! (Why doesn't this mean unsafe Rust?)
     writer.flush()?;
+    Ok(())
+}
+
+// TODO ALEX: remove this when making generic printing structure function
+pub fn write_csv_teams(teams: &Vec<Team>, path: &str) -> Result<(), Box<dyn Error>> {
+    let file = File::create(Path::new(path))?;
+    let mut file = LineWriter::new(file);
+    for team in teams {
+        file.write_all(b"new team\n")?;
+        for player in &team.members {
+            file.write_all(player.name.as_bytes())?;
+            file.write_all(b", ")?;
+        }
+        file.write_all(format!("team score: {}", team.team_score).as_bytes())?;
+        file.write_all(b"\n")?;
+    }
+
+    file.flush()?;
+
     Ok(())
 }
 

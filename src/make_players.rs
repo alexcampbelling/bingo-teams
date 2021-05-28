@@ -2,6 +2,7 @@ use crate::data_structures::Player;
 use reqwest::Error;
 use serde_json::Value;
 
+// TODO ALEX: put these in a constants / config file
 const DAY_IN_SEC: u64 = 86400;
 const DAYS_IN_YEAR: u64 = 365;
 const AVERAGE_DAYS_COEFF: u64 = 14; // Used to make a nicer score for efficient hours stats
@@ -13,6 +14,7 @@ pub async fn create_players_with_temple(player_names: &Vec<String>) -> Result<Ve
     let mut players = Vec::new();
 
     for name in player_names.iter() {
+        println!("Searching for player: {:?}", name);
         // Get most current data
         let res_j: Value = reqwest::get(format!(
             "https://templeosrs.com/api/player_stats.php?player={}&bosses=1",
@@ -51,9 +53,9 @@ pub async fn create_players_with_temple(player_names: &Vec<String>) -> Result<Ve
             // TODO ALEX: scale these numbers before adding weights? something relative to a normal weeks worth of hours?
             ehp: res_j["data"]["Ehp"].as_f64().unwrap(),
             ehb: res_j["data"]["Ehb"].as_f64().unwrap(),
-            ehp_avg: average_efficient_hours(res_avg_j["data"]["Ehp"].as_f64().unwrap()),
-            ehb_avg: average_efficient_hours(res_avg_j["data"]["Ehb"].as_f64().unwrap()),
-            tiles_score: get_tile_pc(res_j.clone()),
+            ehp_avg: normalise_avg_eff_hours(res_avg_j["data"]["Ehp"].as_f64().unwrap()),
+            ehb_avg: normalise_avg_eff_hours(res_avg_j["data"]["Ehb"].as_f64().unwrap()),
+            tiles_score: get_tile_pc(&res_j),
             ..Default::default()
         });
     }
@@ -71,16 +73,34 @@ fn slayer_ability(xp: u64, xp_wanted: u64) -> f64 {
     }
 }
 
-fn average_efficient_hours(hours: f64) -> f64 {
+// Here we average hours played in a two week time period compared for last year played
+fn normalise_avg_eff_hours(hours: f64) -> f64 {
     hours / (DAYS_IN_YEAR / AVERAGE_DAYS_COEFF) as f64
 }
 
-fn get_tile_pc(p: Value) -> f64 {
+// This simply gives a percentage score of 'accessibility' determined by if the player has any kc
+fn get_tile_pc(p: &Value) -> f64 {
     // TODO ALEX: remove this, get this from config file
     let bosses_in_board: Vec<String> = vec![
         String::from("Zulrah"),
-        String::from("butt"),
-        String::from("Vetion"),
+        String::from("Grotesque Guardians"),
+        String::from("KreeArra"),
+        String::from("Kril Tsutsaroth"),
+        String::from("Mimic"),
+        String::from("The Nightmare"),
+        String::from("General Graardor"),
+        String::from("Chambers of Xeric"),
+        String::from("Chambers of Xeric Challenge Mode"),
+        String::from("Cerberus"),
+        String::from("Theatre of Blood"),
+        String::from("Sarachnis"),
+        String::from("Kalphite Queen"),
+        String::from("Corporeal Beast"),
+        String::from("Barrows Chests"),
+        String::from("Thermonuclear Smoke Devil"),
+        String::from("The Gauntlet"),
+        String::from("Zalcano"),
+        String::from("Vorkath"),
     ];
 
     let mut counter = 0;

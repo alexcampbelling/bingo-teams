@@ -23,8 +23,9 @@ Todo
     - bingo-teams make-teams <csv with players and full scores> <amount of teams to divide into>
         - this would be used once all scores are done, out puts a txt document with teams, members, final summed score, number of players in team
 
+
 To-do
-- make weighted score function
-- make team distribution structures and functions
-- make config file where we keep weights
-- why the fuck is the release build so friggen big, 260mb for such small amount of code? does it include entire crates used? do i need build flags?
+- weight ehb and ehp in make-players
+- add list of tiles to check kc against in make-players (or config)
+- create weighting function (with a real example to see scale of scores relative)
+- make team making
