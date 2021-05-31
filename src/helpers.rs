@@ -43,6 +43,7 @@ pub fn write_csv_teams(teams: &Vec<Team>, path: &str) -> Result<(), Box<dyn Erro
             file.write_all(b", ")?;
         }
         file.write_all(format!("team score: {}", team.team_score).as_bytes())?;
+        file.write_all(format!("team size: {}", team.members.len()).as_bytes())?;
         file.write_all(b"\n")?;
     }
 

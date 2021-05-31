@@ -88,7 +88,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             println!("sub_m for make-teams: {:?}", sub_m);
             let file_name = sub_m.value_of("file").unwrap();
             // let team_count = sub_m.value_of("team_count").unwrap();
-            let team_count = 13;
+            let team_count = 11;
 
             println!("Reading in players...");
             let mut players = helpers::read_csv_players(file_name)?;
