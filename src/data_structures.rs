@@ -1,6 +1,6 @@
 use serde_derive::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Default, Clone)]
+#[derive(Serialize, Deserialize, Default, Clone)]
 pub struct Player {
     pub name: String,
     pub ehp: f64,
@@ -13,7 +13,7 @@ pub struct Player {
     pub weighted_score: u64,
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct Team {
     pub team_number: u64,
     pub members: Vec<Player>,
