@@ -16,7 +16,7 @@ pub fn sort_player_teams(players: &mut Vec<Player>, team_count: u64) -> Vec<Team
 
     let mut direction = true;
     let mut counter = 0;
-    for i in 0..players.len() {
+    for _i in 0..players.len() {
         // let mut player = player_iter.next().unwrap();
         // println!("checking, got player: {:?}", player.name);
         // println!("checking their score: {:?}", player.weighted_score);
