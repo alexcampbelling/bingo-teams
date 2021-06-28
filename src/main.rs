@@ -16,7 +16,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let matches = App::new("bingo-teams")
         .version("0.1.0")
         .author("Alexander <alexander.wesley.campbell@gmail.com>")
-        .about("Helps create fair bingo teams for OSRS using Temple OSRS API.")
+        .about("Helps create fair bingo teams for OSRS using the Temple OSRS API.")
         // ./target/release/bingo-teams make-players input/usernames_test.csv
         .subcommand(
             App::new("make-players")
