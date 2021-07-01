@@ -8,7 +8,6 @@ const EHB_A_W: f64 = 0.10;
 const TILE_W: f64 = 0.25;
 const SLAYER_W: f64 = 0.25;
 
-// TODO ALEX: complete this
 pub fn weight_scores(players: &mut Vec<Player>) -> &mut Vec<Player> {
     for player in players.iter_mut() {
         let weighted_score: f64 = weight_calculator(player);
